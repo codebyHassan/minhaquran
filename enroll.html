@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enroll Now | Minha Qur’an Academy</title>
+  <meta name="description"
+    content="Enroll in online Quran courses, Tajweed classes, Islamic Studies or Professional Teacher Training at Minha Qur’an Academy.">
+  <meta name="keywords" content="Minha Qur'an Academy Enrollment, Enroll Quran Course, Learn Quran Online">
+  <link rel="icon" type="image/jpeg" href="assets/images/logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Fredoka:wght@500;600&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+
+<body data-page="enroll">
+  <header id="site-header"></header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><span>Enroll</span>
+        </nav>
+        <span class="eyebrow">Start Your Learning Journey</span>
+        <h1>Online Course <em>Enrollment</em></h1>
+        <p>Complete the details below to submit your enrollment request. We will contact you to confirm course details
+          and timings.</p>
+      </div>
+    </section>
+
+    <!-- ENROLLMENT FORM -->
+    <section class="section">
+      <div class="container-narrow">
+        <div class="form-card reveal">
+          <div class="section-head center" style="margin-bottom:32px;">
+            <span class="eyebrow">Student Registration</span>
+            <h2>Enrollment Application</h2>
+            <p>Please provide accurate details so we can assess student requirements appropriately.</p>
+          </div>
+
+          <form data-form="enroll" id="enrollment-form">
+            <div class="form-grid">
+              <!-- Student Name -->
+              <div class="field">
+                <label for="student_name">Student Name <span class="req">*</span></label>
+                <input type="text" id="student_name" name="student_name" data-label="Student Name" required
+                  placeholder="Enter student's full name">
+              </div>
+
+              <!-- Age -->
+              <div class="field">
+                <label for="age">Age <span class="req">*</span></label>
+                <input type="text" id="age" name="age" data-label="Age" required
+                  placeholder="e.g. 8 years, 16 years, Adult">
+              </div>
+
+              <!-- Country -->
+              <div class="field">
+                <label for="country">Country <span class="req">*</span></label>
+                <input type="text" id="country" name="country" data-label="Country" required
+                  placeholder="e.g. United Kingdom, USA, Pakistan">
+              </div>
+
+              <!-- WhatsApp Number -->
+              <div class="field">
+                <label for="whatsapp">WhatsApp Number <span class="req">*</span></label>
+                <input type="tel" id="whatsapp" name="whatsapp" data-label="WhatsApp Number" required
+                  placeholder="+1 234 567 8900">
+              </div>
+
+              <!-- Email Address -->
+              <div class="field full">
+                <label for="email">Email Address <span class="req">*</span></label>
+                <input type="email" id="email" name="email" data-label="Email Address" required
+                  placeholder="you@example.com">
+              </div>
+
+              <!-- Course Dropdown -->
+              <div class="field full">
+                <label for="course">Course Interested In <span class="req">*</span></label>
+                <select id="course" name="course" data-label="Course Interested In" required>
+                  <option value="" disabled selected>-- Select a Course --</option>
+                  <option value="Noorani / Madani Qaida Course">1. Noorani / Madani Qaida Course</option>
+                  <option value="Noor-ul-Bayan Course">2. Noor-ul-Bayan Course</option>
+                  <option value="Quran Reading Course">3. Quran Reading Course</option>
+                  <option value="Quran with Tajweed Course">4. Quran with Tajweed Course</option>
+                  <option value="Advanced Tajweed Course">5. Advanced Tajweed Course</option>
+                  <option value="Islamic Studies">6. Islamic Studies</option>
+                  <option value="Professional Quran Teacher Training Course">7. Professional Quran Teacher Training
+                    Course</option>
+                </select>
+              </div>
+
+              <!-- Current Quran Reading Level -->
+              <div class="field full">
+                <label for="level">Current Quran Reading Level <span class="req">*</span></label>
+                <select id="level" name="level" data-label="Current Reading Level" required>
+                  <option value="" disabled selected>-- Select Current Level --</option>
+                  <option value="Complete Beginner (No Arabic knowledge)">Complete Beginner (No Arabic knowledge)
+                  </option>
+                  <option value="Knows Arabic Alphabet (Letters only)">Knows Arabic Alphabet (Letters only)</option>
+                  <option value="Can read Qaida with Harakat">Can read Qaida with Harakat</option>
+                  <option value="Can read Quran with help/slowly">Can read Quran with help/slowly</option>
+                  <option value="Can read Quran fluently (Needs Tajweed)">Can read Quran fluently (Needs Tajweed)
+                  </option>
+                  <option value="Advanced / Tajweed student">Advanced / Tajweed student</option>
+                  <option value="Aspiring Quran Teacher">Aspiring Quran Teacher (Applying for Teacher Training)</option>
+                </select>
+              </div>
+
+              <!-- Preferred Class Timing -->
+              <div class="field full">
+                <label for="timing">Preferred Class Timing / Timezone <span class="req">*</span></label>
+                <input type="text" id="timing" name="timing" data-label="Preferred Timing" required
+                  placeholder="e.g. Weekdays Evenings (GMT), Weekend Mornings (EST)">
+              </div>
+
+              <!-- Message -->
+              <div class="field full">
+                <label for="message">Message / Specific Learning Requirements</label>
+                <textarea id="message" name="message" data-label="Message"
+                  placeholder="Any details regarding learning pace, special requirements, or prior background..."></textarea>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="field full mt-2">
+                <button type="submit" class="btn btn-gold btn-block" style="padding:16px;">
+                  <span>Submit Enrollment Request</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <p class="form-note">Your privacy is respected. Information is only used to coordinate your classes.</p>
+          </form>
+
+          <!-- Success State -->
+          <div class="form-success">
+            <div class="tick">✓</div>
+            <h3 style="color:var(--emerald-900);">Enrollment Request Received</h3>
+            <p class="mt-1">JazakAllah Khair for reaching out to Minha Qur’an Academy. We have received your details and
+              will be in touch shortly via WhatsApp / Email to discuss class arrangements.</p>
+            <div class="btn-row center-row mt-3">
+              <a href="index.html" class="btn btn-emerald">Return to Home</a>
+              <a href="#" data-wa class="btn btn-wa">Chat with Us on WhatsApp</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ASSISTANCE BANNER -->
+    <section class="section section-cream">
+      <div class="container text-center reveal">
+        <span class="eyebrow">Need Assistance?</span>
+        <h2>Prefer to speak directly?</h2>
+        <p class="mt-1">You can also message us directly on WhatsApp or Email for instant course consultations.</p>
+        <div class="btn-row center-row mt-2">
+          <a href="#" data-wa class="btn btn-wa">Open WhatsApp Chat</a>
+          <a href="contact.html" class="btn btn-outline">View All Contact Options</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+  <script src="assets/js/main.js"></script>
+</body>
+
+</html>
