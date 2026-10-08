@@ -1,0 +1,8 @@
+# robots.txt for Minha Qur’an Academy
+# Crawl instructions for search engines
+
+User-agent: *
+Allow: /
+
+# Canonical XML Sitemap
+Sitemap: https://codebyhassan.github.io/minhaquran/sitemap.xml

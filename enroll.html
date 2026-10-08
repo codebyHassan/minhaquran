@@ -4,17 +4,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enroll Now | Minha Qur’an Academy</title>
+  <title>Enroll Now | Register for Online Quran Classes &amp; Free Trial</title>
   <meta name="description"
-    content="Enroll in online Quran courses, Tajweed classes, Islamic Studies or Professional Teacher Training at Minha Qur’an Academy.">
-  <meta name="keywords" content="Minha Qur'an Academy Enrollment, Enroll Quran Course, Learn Quran Online">
+    content="Register for online Quran classes or Professional Teacher Training at Minha Qur’an Academy. Flexible hours, certified teachers, and tailored lessons for kids and adults.">
+  <meta name="keywords" content="Minha Qur'an Academy Enrollment, Enroll Quran Course, Learn Quran Online, Online Quran Registration">
+  <link rel="canonical" href="https://codebyhassan.github.io/minhaquran/enroll.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://codebyhassan.github.io/minhaquran/enroll.html">
+  <meta property="og:title" content="Enroll Now | Register for Online Quran Classes &amp; Free Trial">
+  <meta property="og:description"
+    content="Register for online Quran classes or Professional Teacher Training at Minha Qur’an Academy. Flexible hours, certified teachers, and tailored lessons for kids and adults.">
+  <meta property="og:image" content="https://codebyhassan.github.io/minhaquran/assets/images/hero-learning.jpg">
+  <meta property="og:site_name" content="Minha Qur’an Academy">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://codebyhassan.github.io/minhaquran/enroll.html">
+  <meta name="twitter:title" content="Enroll Now | Register for Online Quran Classes &amp; Free Trial">
+  <meta name="twitter:description"
+    content="Register for online Quran classes or Professional Teacher Training at Minha Qur’an Academy. Flexible hours, certified teachers, and tailored lessons for kids and adults.">
+  <meta name="twitter:image" content="https://codebyhassan.github.io/minhaquran/assets/images/hero-learning.jpg">
+
   <link rel="icon" type="image/jpeg" href="assets/images/logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Fredoka:wght@500;600&family=Manrope:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer">
   <link rel="stylesheet" href="assets/css/main.css">
+
+  <!-- Structured Data: WebPage and BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://codebyhassan.github.io/minhaquran/enroll.html",
+        "url": "https://codebyhassan.github.io/minhaquran/enroll.html",
+        "name": "Enroll Now | Register for Online Quran Classes & Free Trial",
+        "description": "Register for online Quran classes or Professional Teacher Training at Minha Qur’an Academy. Flexible hours, certified teachers, and tailored lessons for kids and adults.",
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://codebyhassan.github.io/minhaquran/#website"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://codebyhassan.github.io/minhaquran/enroll.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://codebyhassan.github.io/minhaquran/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Enroll",
+            "item": "https://codebyhassan.github.io/minhaquran/enroll.html"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body data-page="enroll">
@@ -42,7 +101,12 @@
             <p>Please provide accurate details so we can assess student requirements appropriately.</p>
           </div>
 
-          <form data-form="enroll" id="enrollment-form">
+          <form action="https://formspree.io/f/mgaoknda" method="POST" data-form="enroll" id="enrollment-form">
+            <!-- Formspree Subject & Config -->
+            <input type="hidden" name="_subject" value="New Student Enrollment Application — Minha Qur'an Academy">
+            <input type="hidden" name="_source" value="Minha Quran Academy Website (Enrollment Form)">
+            <div class="form-error" role="alert"></div>
+
             <div class="form-grid">
               <!-- Student Name -->
               <div class="field">
@@ -141,7 +205,7 @@
 
           <!-- Success State -->
           <div class="form-success">
-            <div class="tick">✓</div>
+            <div class="tick"><i class="fa-solid fa-check"></i></div>
             <h3 style="color:var(--emerald-900);">Enrollment Request Received</h3>
             <p class="mt-1">JazakAllah Khair for reaching out to Minha Qur’an Academy. We have received your details and
               will be in touch shortly via WhatsApp / Email to discuss class arrangements.</p>

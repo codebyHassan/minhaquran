@@ -21,7 +21,7 @@ const THEME_PRESETS = [
   {
     id: 'emerald-gold',
     name: 'Emerald & Gold',
-    label: '🌿 Royal Emerald & Gold (Default)',
+    label: '<i class="fa-solid fa-leaf" style="color:#22c55e;margin-right:6px"></i> Royal Emerald & Gold (Default)',
     primary: '#0a3328',
     secondary: '#c39b52',
     bg: '#fbf8f2',
@@ -31,7 +31,7 @@ const THEME_PRESETS = [
   {
     id: 'midnight-amber',
     name: 'Midnight & Amber',
-    label: '🌌 Midnight Navy & Amber',
+    label: '<i class="fa-solid fa-moon" style="color:#60a5fa;margin-right:6px"></i> Midnight Navy & Amber',
     primary: '#0c2744',
     secondary: '#f59e0b',
     bg: '#f8fafc',
@@ -41,7 +41,7 @@ const THEME_PRESETS = [
   {
     id: 'imperial-ruby',
     name: 'Imperial Ruby',
-    label: '🍷 Imperial Ruby & Champagne',
+    label: '<i class="fa-solid fa-gem" style="color:#f43f5e;margin-right:6px"></i> Imperial Ruby & Champagne',
     primary: '#4c1221',
     secondary: '#d4af37',
     bg: '#fdf9f7',
@@ -51,7 +51,7 @@ const THEME_PRESETS = [
   {
     id: 'warm-olive',
     name: 'Warm Olive',
-    label: '🫒 Warm Olive & Antique Bronze',
+    label: '<i class="fa-solid fa-seedling" style="color:#a3e635;margin-right:6px"></i> Warm Olive & Antique Bronze',
     primary: '#28382b',
     secondary: '#b89047',
     bg: '#faf7f0',
@@ -61,7 +61,7 @@ const THEME_PRESETS = [
   {
     id: 'ocean-teal',
     name: 'Ocean Teal',
-    label: '🌊 Deep Ocean Teal & Gold',
+    label: '<i class="fa-solid fa-water" style="color:#38bdf8;margin-right:6px"></i> Deep Ocean Teal & Gold',
     primary: '#0f3f45',
     secondary: '#d99e32',
     bg: '#f4faf9',
@@ -71,7 +71,7 @@ const THEME_PRESETS = [
   {
     id: 'luxury-dark',
     name: 'Luxury Dark',
-    label: '🌑 Luxury Dark Mode & Gold',
+    label: '<i class="fa-solid fa-circle-half-stroke" style="color:#eab308;margin-right:6px"></i> Luxury Dark Mode & Gold',
     primary: '#091512',
     secondary: '#e5b95c',
     bg: '#0f1715',
@@ -433,11 +433,11 @@ function renderLayout() {
       <div class="container footer-grid">
         <div>
           <a href="index.html" class="brand">
-            <img src="assets/images/logo.jpg" alt="" width="48" height="48">
+            <img src="assets/images/logo.jpg" alt="Minha Qur’an Academy logo" width="48" height="48">
             <span><span class="brand-name">Minha Qur’an</span><span class="brand-sub">ACADEMY</span></span>
           </a>
           <p class="footer-tag">Learn Quran. Understand Islam.<br>Become a Confident Quran Teacher.</p>
-          <p>Online Quran &amp; Islamic Education for Children, Teenagers, Adults &amp; Aspiring Quran Teachers.</p>
+          <p>Teaching children and families worldwide since 2018. Structured, engaging Quran &amp; Islamic education with certified male and female scholars.</p>
           <div class="socials">${social}</div>
         </div>
         <div>
@@ -478,7 +478,12 @@ function renderLayout() {
       </div>
       <div class="container footer-bottom">
         <span>© ${new Date().getFullYear()} Minha Qur’an Academy. All Rights Reserved.</span>
-        <span>Online Quran &amp; Islamic Education for international students</span>
+        <div class="footer-bottom-meta">
+          <span>Online Quran &amp; Islamic Education · Teaching Children Since 2018</span>
+          <button type="button" class="footer-theme-toggle" id="footer-theme-toggle" title="Customize Theme Colors &amp; Fonts" aria-label="Customize Theme Colors and Fonts">
+            <i class="fa-solid fa-palette"></i>
+          </button>
+        </div>
       </div>`;
   }
 
@@ -496,7 +501,7 @@ function renderLayout() {
           </div>
           <div>
             <div class="wa-popup-title">Minha Qur’an Academy</div>
-            <div class="wa-popup-status">🟢 Online · Quick Response</div>
+            <div class="wa-popup-status"><i class="fa-solid fa-circle" style="color:#22c55e;font-size:9px;vertical-align:middle;margin-right:5px"></i>Online · Quick Response</div>
           </div>
         </div>
         <button type="button" class="wa-popup-close" id="wa-popup-close" aria-label="Close WhatsApp Menu">&times;</button>
@@ -638,10 +643,10 @@ function initReveal() {
   els.forEach(e => io.observe(e));
 }
 
-/* ---------- 5. Forms (enrollment & contact) ----------
-   No server needed: the request is sent via WhatsApp (if a number is set)
-   or the visitor's email app (if an email is set). */
+/* ---------- 5. Forms (enrollment & contact) via Formspree ---------- */
 function initForms() {
+  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mgaoknda';
+
   document.querySelectorAll('form[data-form]').forEach(form => {
     // Pre-select course from ?course=
     const preset = new URLSearchParams(location.search).get('course');
@@ -651,24 +656,83 @@ function initForms() {
       if (opt) select.value = opt.value;
     }
 
-    form.addEventListener('submit', e => {
+    form.addEventListener('submit', async e => {
       e.preventDefault();
       if (!form.reportValidity()) return;
 
-      const title = form.dataset.form === 'enroll' ? 'New Enrollment Request' : 'New Contact Message';
-      const lines = [...form.elements]
-        .filter(el => el.name && el.value.trim())
-        .map(el => `${el.dataset.label || el.name}: ${el.value.trim()}`);
-      const body = `${title} — Minha Qur’an Academy\n\n${lines.join('\n')}`;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+      let errorEl = form.querySelector('.form-error');
 
-      if (SITE.whatsapp) {
-        window.open(`https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(body)}`, '_blank');
-      } else if (SITE.email) {
-        location.href = `mailto:${SITE.email}?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+      // Clear previous error message
+      if (errorEl) {
+        errorEl.classList.remove('show');
+        errorEl.textContent = '';
       }
 
-      const success = form.parentElement.querySelector('.form-success');
-      if (success) { form.hidden = true; success.classList.add('show'); success.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      // Show submitting state on the button
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.78';
+        submitBtn.innerHTML = `
+          <span>Submitting...</span>
+          <svg style="animation:spin 1s linear infinite;width:18px;height:18px;margin-left:8px;display:inline-block;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+            <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
+          </svg>
+        `;
+      }
+
+      const endpoint = form.getAttribute('action') || FORMSPREE_ENDPOINT;
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const success = form.parentElement.querySelector('.form-success');
+          form.style.display = 'none';
+          form.hidden = true;
+          form.reset();
+
+          if (success) {
+            success.classList.add('show');
+            success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        } else {
+          const data = await response.json().catch(() => ({}));
+          let errorMsg = 'Oops! There was a problem submitting your request. Please try again.';
+          if (data && data.errors && data.errors.length) {
+            errorMsg = data.errors.map(err => err.message || err.field).join(', ');
+          }
+          showFormError(errorMsg);
+        }
+      } catch (err) {
+        showFormError('Network error! Please check your internet connection or reach out to us directly on WhatsApp.');
+      }
+
+      function showFormError(msg) {
+        if (!errorEl) {
+          errorEl = document.createElement('div');
+          errorEl.className = 'form-error';
+          form.insertBefore(errorEl, form.firstChild);
+        }
+        errorEl.textContent = msg;
+        errorEl.classList.add('show');
+        errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '';
+          submitBtn.innerHTML = originalBtnHtml;
+        }
+      }
     });
   });
 }
@@ -686,7 +750,7 @@ function initLetterGame() {
   const target = game.querySelector('#game-target');
   const msg = game.querySelector('.game-msg');
   const scoreEl = game.querySelector('#game-score');
-  const cheers = ['MashaAllah! 🌟', 'Excellent! 🎉', 'Well done! 💛', 'Super star! ⭐', 'Amazing! 🌈'];
+  const cheers = ['MashaAllah!', 'Excellent!', 'Well done!', 'Super star!', 'Amazing!'];
   let score = 0, answer, locked = false;
 
   const shuffle = arr => arr.map(v => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(v => v[1]);
@@ -724,17 +788,12 @@ function initThemeCustomizer() {
 
   let currentTheme = getStoredTheme() || { ...DEFAULT_THEME };
 
-  // 1. Floating launcher button
+  // 1. Theme trigger launcher (Floating button hidden; relocated to footer icon)
   const triggerBtn = document.createElement('button');
   triggerBtn.className = 'tc-trigger-btn';
   triggerBtn.id = 'tc-trigger-btn';
+  triggerBtn.style.display = 'none';
   triggerBtn.setAttribute('aria-label', 'Open Theme Customizer');
-  triggerBtn.setAttribute('title', 'Customize Colors & Fonts');
-  triggerBtn.innerHTML = `
-    <span class="tc-btn-icon">🎨</span>
-    <span class="tc-btn-label">Customize Theme</span>
-  `;
-  document.body.appendChild(triggerBtn);
 
   // 2. Backdrop
   const backdrop = document.createElement('div');
@@ -761,7 +820,7 @@ function initThemeCustomizer() {
     <div class="tc-header">
       <div class="tc-title-wrap">
         <span class="tc-header-badge">LIVE EDITOR</span>
-        <h3 class="tc-title">🎨 Theme Customizer</h3>
+        <h3 class="tc-title"><i class="fa-solid fa-palette" style="margin-right:8px;color:var(--gold-400)"></i>Theme Customizer</h3>
         <p class="tc-subtitle">Change site colors &amp; typography live for client preview</p>
       </div>
       <button class="tc-close-btn" id="tc-close-btn" aria-label="Close Theme Customizer">&times;</button>
@@ -851,7 +910,7 @@ function initThemeCustomizer() {
       </div>
 
       <div class="tc-note">
-        ✨ <strong>Instant Live Preview:</strong> Changes apply instantly across the whole page and save to your browser. Use <strong>Copy CSS</strong> to get permanent CSS code for your project!
+        <i class="fa-solid fa-sparkles" style="color:var(--gold-400);margin-right:6px"></i><strong>Instant Live Preview:</strong> Changes apply instantly across the whole page and save to your browser. Use <strong>Copy CSS</strong> to get permanent CSS code for your project!
       </div>
     </div>
   `;
@@ -881,9 +940,19 @@ function initThemeCustomizer() {
     drawer.setAttribute('aria-hidden', 'true');
   };
 
-  triggerBtn.addEventListener('click', () => {
+  const toggleDrawer = () => {
     if (document.body.classList.contains('tc-open')) closeDrawer();
     else openDrawer();
+  };
+
+  triggerBtn.addEventListener('click', toggleDrawer);
+
+  // Global listener for footer theme toggle button and any theme triggers
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('#footer-theme-toggle, .footer-theme-toggle, #tc-trigger-btn');
+    if (!btn) return;
+    e.preventDefault();
+    toggleDrawer();
   });
 
   backdrop.addEventListener('click', closeDrawer);
@@ -1011,7 +1080,7 @@ function initThemeCustomizer() {
     localStorage.removeItem('minha_site_theme');
     applyTheme(DEFAULT_THEME, false);
     syncInputs();
-    showToast('Theme reset to default brand colors! ✓');
+    showToast('Theme reset to default brand colors!');
   });
 
   // Copy CSS Variables
@@ -1063,7 +1132,7 @@ function initThemeCustomizer() {
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(cssCode).then(() => {
-        showToast('CSS Code Copied to Clipboard! ✓');
+        showToast('CSS Code Copied to Clipboard!');
       }).catch(() => {
         fallbackCopy(cssCode);
       });
@@ -1079,8 +1148,217 @@ function initThemeCustomizer() {
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    showToast('CSS Code Copied to Clipboard! ✓');
+    showToast('CSS Code Copied to Clipboard!');
   }
+}
+
+/* ---------- 8. Multinational Reviews Carousel ---------- */
+function initReviewsCarousel() {
+  const sections = document.querySelectorAll('.reviews-section');
+  if (!sections.length) return;
+
+  sections.forEach(section => {
+    const track = section.querySelector('.reviews-carousel-track');
+    const viewport = section.querySelector('.reviews-carousel-viewport');
+    const prevBtn = section.querySelector('.reviews-nav-prev');
+    const nextBtn = section.querySelector('.reviews-nav-next');
+    const dotsContainer = section.querySelector('.reviews-dots');
+    const counterEl = section.querySelector('.reviews-counter-current');
+    const counterTotalEl = section.querySelector('.reviews-counter-total');
+    const filterBtns = section.querySelectorAll('.reviews-filter-btn');
+    if (!track) return;
+
+    let allCards = Array.from(track.querySelectorAll('.review-card-modern'));
+    let visibleCards = [...allCards];
+    let currentIndex = 0;
+    let autoSlideInterval = null;
+    let isTouching = false;
+    let startX = 0;
+    let currentX = 0;
+
+    const getItemsPerView = () => {
+      const w = window.innerWidth;
+      if (w <= 720) return 1;
+      if (w <= 1080) return 2;
+      return 3;
+    };
+
+    const getMaxIndex = () => {
+      const perView = getItemsPerView();
+      return Math.max(0, visibleCards.length - perView);
+    };
+
+    const updateDots = () => {
+      if (!dotsContainer) return;
+      dotsContainer.innerHTML = '';
+      const maxIdx = getMaxIndex();
+      const dotCount = maxIdx + 1;
+
+      for (let i = 0; i < dotCount; i++) {
+        const dot = document.createElement('button');
+        dot.className = `reviews-dot ${i === currentIndex ? 'active' : ''}`;
+        dot.setAttribute('aria-label', `Go to review slide ${i + 1}`);
+        dot.setAttribute('type', 'button');
+        dot.addEventListener('click', () => {
+          goToSlide(i);
+          resetAutoSlide();
+        });
+        dotsContainer.appendChild(dot);
+      }
+    };
+
+    const updateCounter = () => {
+      if (counterEl) {
+        counterEl.textContent = String(currentIndex + 1).padStart(2, '0');
+      }
+      if (counterTotalEl) {
+        counterTotalEl.textContent = `/ ${String(visibleCards.length).padStart(2, '0')}`;
+      }
+    };
+
+    const updatePosition = () => {
+      if (!visibleCards.length || !visibleCards[currentIndex]) {
+        track.style.transform = 'translateX(0px)';
+        return;
+      }
+      const targetCard = visibleCards[currentIndex];
+      const offset = targetCard.offsetLeft;
+      track.style.transform = `translateX(-${offset}px)`;
+
+      if (dotsContainer) {
+        const dots = dotsContainer.querySelectorAll('.reviews-dot');
+        dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentIndex));
+      }
+
+      updateCounter();
+    };
+
+    const goToSlide = (index) => {
+      const maxIdx = getMaxIndex();
+      if (index < 0) {
+        currentIndex = maxIdx;
+      } else if (index > maxIdx) {
+        currentIndex = 0;
+      } else {
+        currentIndex = index;
+      }
+      updatePosition();
+    };
+
+    const nextSlide = () => goToSlide(currentIndex + 1);
+    const prevSlide = () => goToSlide(currentIndex - 1);
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        prevSlide();
+        resetAutoSlide();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        nextSlide();
+        resetAutoSlide();
+      });
+    }
+
+    // Filter cards
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+
+        allCards.forEach(card => {
+          const categories = (card.dataset.category || '').split(' ');
+          if (filter === 'all' || categories.includes(filter)) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        visibleCards = allCards.filter(c => c.style.display !== 'none');
+        currentIndex = 0;
+        updateDots();
+        updatePosition();
+        resetAutoSlide();
+      });
+    });
+
+    // Auto slide
+    const startAutoSlide = () => {
+      stopAutoSlide();
+      autoSlideInterval = setInterval(() => {
+        nextSlide();
+      }, 4800);
+    };
+
+    const stopAutoSlide = () => {
+      if (autoSlideInterval) clearInterval(autoSlideInterval);
+      autoSlideInterval = null;
+    };
+
+    const resetAutoSlide = () => {
+      stopAutoSlide();
+      startAutoSlide();
+    };
+
+    if (viewport) {
+      viewport.addEventListener('mouseenter', stopAutoSlide);
+      viewport.addEventListener('mouseleave', startAutoSlide);
+
+      // Touch handling
+      viewport.addEventListener('touchstart', (e) => {
+        stopAutoSlide();
+        isTouching = true;
+        startX = e.touches[0].clientX;
+        currentX = startX;
+      }, { passive: true });
+
+      viewport.addEventListener('touchmove', (e) => {
+        if (!isTouching) return;
+        currentX = e.touches[0].clientX;
+      }, { passive: true });
+
+      viewport.addEventListener('touchend', () => {
+        if (!isTouching) return;
+        isTouching = false;
+        const diffX = startX - currentX;
+        if (Math.abs(diffX) > 40) {
+          if (diffX > 0) nextSlide();
+          else prevSlide();
+        }
+        startAutoSlide();
+      });
+    }
+
+    // Keyboard navigation when focused inside section
+    section.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        prevSlide();
+        resetAutoSlide();
+      } else if (e.key === 'ArrowRight') {
+        nextSlide();
+        resetAutoSlide();
+      }
+    });
+
+    // Window resize debounced
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        updateDots();
+        goToSlide(Math.min(currentIndex, getMaxIndex()));
+      }, 150);
+    }, { passive: true });
+
+    // Initialize state
+    updateDots();
+    updatePosition();
+    startAutoSlide();
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1090,4 +1368,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initReveal();
   initForms();
   initLetterGame();
+  initReviewsCarousel();
 });
+
