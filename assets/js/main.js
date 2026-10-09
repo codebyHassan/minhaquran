@@ -337,6 +337,170 @@ const ICON = {
 const waLink = (text = SITE.waGreeting) =>
   SITE.whatsapp ? `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(text)}` : 'contact.html';
 
+/* ---------- 1.5. Premium Welcome Preloader ---------- */
+function shouldShowPreloader() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('preview_loader') === '1' || urlParams.get('loader') === '1') {
+      return true;
+    }
+    const hasSeen = sessionStorage.getItem('mqa_loader_seen');
+    if (!hasSeen) {
+      return true;
+    }
+  } catch (e) {
+    return false;
+  }
+  return false;
+}
+
+function spawnPreloader(isManualTrigger = false) {
+  const existing = document.getElementById('mqa-preloader');
+  if (existing) existing.remove();
+
+  document.documentElement.classList.add('mqa-preloader-active');
+
+  const preloader = document.createElement('div');
+  preloader.id = 'mqa-preloader';
+  preloader.className = 'mqa-preloader';
+  preloader.setAttribute('role', 'progressbar');
+  preloader.setAttribute('aria-label', "Loading Minha Qur'an Academy");
+  preloader.setAttribute('aria-valuemin', '0');
+  preloader.setAttribute('aria-valuemax', '100');
+  preloader.setAttribute('aria-valuenow', '0');
+
+  preloader.innerHTML = `
+    <!-- Subtle Golden Ambient Warmth -->
+    <div class="mqa-preloader-glow" aria-hidden="true"></div>
+
+    <!-- Minimalist Skip Button -->
+    <button type="button" class="mqa-preloader-skip" id="mqa-preloader-skip" aria-label="Skip introduction">
+      <span>Skip</span>
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+
+    <!-- Preloader Center Content -->
+    <div class="mqa-preloader-card">
+      <!-- Holy Bismillah Calligraphy -->
+      <div class="mqa-preloader-bismillah" dir="rtl" lang="ar">
+        بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+      </div>
+
+      <!-- Single Elegant Golden Orbit Ring & Logo -->
+      <div class="mqa-preloader-emblem-wrap">
+        <div class="mqa-preloader-spin-ring" aria-hidden="true"></div>
+        <div class="mqa-preloader-logo-disc">
+          <img src="assets/images/logo.webp" alt="Minha Qur’an Academy Logo" class="mqa-preloader-logo-img" width="66" height="66">
+        </div>
+      </div>
+
+      <!-- Academy Name & Branding -->
+      <div class="mqa-preloader-brand">
+        <h2 class="mqa-preloader-title">Minha Qur’an Academy</h2>
+        <p class="mqa-preloader-sub">Online Quran &amp; Islamic Studies · Est. 2018</p>
+      </div>
+
+      <!-- Minimalist Golden Progress Line -->
+      <div class="mqa-preloader-progress-wrap">
+        <div class="mqa-preloader-track">
+          <div class="mqa-preloader-bar" id="mqa-preloader-bar"></div>
+        </div>
+        <div class="mqa-preloader-meta">
+          <span class="mqa-preloader-pct" id="mqa-preloader-pct">0%</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.prepend(preloader);
+
+  const barEl = preloader.querySelector('#mqa-preloader-bar');
+  const pctEl = preloader.querySelector('#mqa-preloader-pct');
+  const skipBtn = preloader.querySelector('#mqa-preloader-skip');
+
+  let currentPct = 0;
+  let isFinished = false;
+  let animFrameId = null;
+
+  function finishLoader() {
+    if (isFinished) return;
+    isFinished = true;
+    if (animFrameId) cancelAnimationFrame(animFrameId);
+
+    currentPct = 100;
+    if (barEl) barEl.style.width = '100%';
+    if (pctEl) pctEl.textContent = '100%';
+    preloader.setAttribute('aria-valuenow', '100');
+
+    try {
+      sessionStorage.setItem('mqa_loader_seen', 'true');
+      localStorage.setItem('mqa_first_visit_completed', 'true');
+    } catch (e) {}
+
+    // Subtle 180ms hold at 100% for a clean, light exit
+    setTimeout(() => {
+      preloader.classList.add('is-exiting');
+
+      setTimeout(() => {
+        preloader.remove();
+        document.documentElement.classList.remove('mqa-preloader-active');
+        window.dispatchEvent(new CustomEvent('mqa:preloader-done'));
+      }, 550);
+    }, 180);
+  }
+
+  if (skipBtn) {
+    skipBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      finishLoader();
+    });
+  }
+
+  // Smooth minimalist progress animation (~1.2s total)
+  const startTime = performance.now();
+  const targetDuration = 1200; // ms
+
+  function tickProgress(now) {
+    if (isFinished) return;
+
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / targetDuration, 1);
+    
+    // Smooth luxury ease curve
+    const eased = 1 - Math.pow(1 - progress, 2.4);
+    currentPct = Math.min(Math.round(eased * 100), 100);
+
+    if (barEl) barEl.style.width = currentPct + '%';
+    if (pctEl) pctEl.textContent = currentPct + '%';
+    preloader.setAttribute('aria-valuenow', String(currentPct));
+
+    if (currentPct >= 100) {
+      finishLoader();
+    } else {
+      animFrameId = requestAnimationFrame(tickProgress);
+    }
+  }
+
+  animFrameId = requestAnimationFrame(tickProgress);
+}
+
+function initPreloader() {
+  if (document.getElementById('mqa-preloader')) return;
+  if (shouldShowPreloader()) {
+    spawnPreloader(false);
+  }
+}
+
+// Global hook to test or replay the loader at any time
+window.replayLoader = function() {
+  spawnPreloader(true);
+};
+
+// Immediate preloader trigger if document.body exists (fastest possible execution)
+if (document.body) {
+  initPreloader();
+}
+
 /* ---------- 2. Shared header & footer ---------- */
 function renderLayout() {
   const page = document.body.dataset.page;
@@ -349,7 +513,7 @@ function renderLayout() {
     header.innerHTML = `
       <div class="container header-inner">
         <a href="index.html" class="brand" aria-label="Minha Qur’an Academy — Home">
-          <img src="assets/images/logo.jpg" alt="Minha Qur’an Academy logo" width="48" height="48">
+          <img src="assets/images/logo.webp" alt="Minha Qur’an Academy logo" width="48" height="48">
           <span><span class="brand-name">Minha Qur’an</span><span class="brand-sub">ACADEMY</span></span>
         </a>
         <nav class="main-nav" aria-label="Main navigation">${links}</nav>
@@ -434,7 +598,7 @@ function renderLayout() {
       <div class="container footer-grid">
         <div>
           <a href="index.html" class="brand">
-            <img src="assets/images/logo.jpg" alt="Minha Qur’an Academy logo" width="48" height="48">
+            <img src="assets/images/logo.webp" alt="Minha Qur’an Academy logo" width="48" height="48">
             <span><span class="brand-name">Minha Qur’an</span><span class="brand-sub">ACADEMY</span></span>
           </a>
           <p class="footer-tag">Learn Quran. Understand Islam.<br>Become a Confident Quran Teacher.</p>
@@ -497,7 +661,7 @@ function renderLayout() {
       <div class="wa-popup-header">
         <div class="wa-popup-profile">
           <div class="wa-popup-avatar">
-            <img src="assets/images/logo.jpg" alt="Minha Qur’an Academy" width="40" height="40">
+            <img src="assets/images/logo.webp" alt="Minha Qur’an Academy" width="40" height="40">
             <span class="wa-online-dot" title="Online"></span>
           </div>
           <div>
@@ -908,6 +1072,10 @@ function initThemeCustomizer() {
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
           <span>Reset to Default</span>
         </button>
+        <button type="button" class="btn btn-outline btn-block tc-btn-replay-loader" id="tc-btn-replay-loader" style="margin-top:10px; border-color:var(--gold-400); color:var(--gold-400); display:flex; align-items:center; justify-content:center; gap:8px;">
+          <i class="fa-solid fa-play"></i>
+          <span>Preview Welcome Loader</span>
+        </button>
       </div>
 
       <div class="tc-note">
@@ -1151,6 +1319,18 @@ function initThemeCustomizer() {
     document.body.removeChild(ta);
     showToast('CSS Code Copied to Clipboard!');
   }
+
+  const replayLoaderBtn = drawer.querySelector('#tc-btn-replay-loader');
+  if (replayLoaderBtn) {
+    replayLoaderBtn.addEventListener('click', () => {
+      closeDrawer();
+      setTimeout(() => {
+        if (typeof window.replayLoader === 'function') {
+          window.replayLoader();
+        }
+      }, 350);
+    });
+  }
 }
 
 /* ---------- 8. Multinational Reviews Carousel ---------- */
@@ -1363,6 +1543,7 @@ function initReviewsCarousel() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initPreloader();
   renderLayout();
   initHeader();
   initThemeCustomizer();
