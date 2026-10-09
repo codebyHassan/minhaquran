@@ -245,12 +245,13 @@ if (_storedTheme) {
 
 /* ---------- 1. SITE SETTINGS — edit these once, updates every page ---------- */
 const SITE = {
+  domain: 'https://minhaquranacademy.com',
   whatsapp: '923320697050',            // Primary (Pakistan: 03320697050)
   whatsappNumbers: [
     { label: 'WhatsApp (Pakistan)', display: '0332 0697050 (+92)', clean: '923320697050' },
     { label: 'WhatsApp (Saudi Arabia)', display: '+966 56 779 6812', clean: '966567796812' }
   ],
-  email: '',               // e.g. 'info@minhaquranacademy.com'
+  email: 'info@minhaquranacademy.com',
   youtube: 'https://www.youtube.com/@MinhaQuranAcademy',
   facebook: '',            // full URL
   instagram: '',           // full URL
