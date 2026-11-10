@@ -363,6 +363,8 @@ function spawnPreloader(isManualTrigger = false) {
   const preloader = document.createElement('div');
   preloader.id = 'mqa-preloader';
   preloader.className = 'mqa-preloader';
+  preloader.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:9999999;display:flex;align-items:center;justify-content:center;background:#faf8f5;overflow:hidden;transition:opacity 0.55s ease,visibility 0.55s ease;';
+  preloader.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:9999999;display:flex;align-items:center;justify-content:center;background:#faf8f5;overflow:hidden;transition:opacity 0.55s ease,visibility 0.55s ease;';
   preloader.setAttribute('role', 'progressbar');
   preloader.setAttribute('aria-label', "Loading Minha Qur'an Academy");
   preloader.setAttribute('aria-valuemin', '0');
@@ -374,39 +376,39 @@ function spawnPreloader(isManualTrigger = false) {
     <div class="mqa-preloader-glow" aria-hidden="true"></div>
 
     <!-- Minimalist Skip Button -->
-    <button type="button" class="mqa-preloader-skip" id="mqa-preloader-skip" aria-label="Skip introduction">
+    <button type="button" class="mqa-preloader-skip" id="mqa-preloader-skip" aria-label="Skip introduction" style="position:absolute;top:22px;right:24px;z-index:10;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;cursor:pointer;">
       <span>Skip</span>
       <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </button>
 
     <!-- Preloader Center Content -->
-    <div class="mqa-preloader-card">
+    <div class="mqa-preloader-card" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px;max-width:420px;width:90%;">
       <!-- Holy Bismillah Calligraphy -->
-      <div class="mqa-preloader-bismillah" dir="rtl" lang="ar">
+      <div class="mqa-preloader-bismillah" dir="rtl" lang="ar" style="margin-bottom:20px;color:#a8823e;">
         بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
       </div>
 
       <!-- Single Elegant Golden Orbit Ring & Logo -->
-      <div class="mqa-preloader-emblem-wrap">
+      <div class="mqa-preloader-emblem-wrap" style="position:relative;width:102px;height:102px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
         <div class="mqa-preloader-spin-ring" aria-hidden="true"></div>
-        <div class="mqa-preloader-logo-disc">
-          <img src="assets/images/logo.webp" alt="Minha Qur’an Academy Logo" class="mqa-preloader-logo-img" width="66" height="66">
+        <div class="mqa-preloader-logo-disc" style="width:76px;height:76px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+          <img src="assets/images/logo.webp" alt="Minha Qur’an Academy Logo" class="mqa-preloader-logo-img" width="66" height="66" style="width:66px;height:66px;object-fit:contain;border-radius:50%;">
         </div>
       </div>
 
       <!-- Academy Name & Branding -->
-      <div class="mqa-preloader-brand">
-        <h2 class="mqa-preloader-title">Minha Qur’an Academy</h2>
-        <p class="mqa-preloader-sub">Online Quran &amp; Islamic Studies · Est. 2018</p>
+      <div class="mqa-preloader-brand" style="margin-bottom:22px;">
+        <h2 class="mqa-preloader-title" style="color:#0a3328;margin:0 0 4px 0;">Minha Qur’an Academy</h2>
+        <p class="mqa-preloader-sub" style="margin:0;color:#7b8882;font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;">Online Quran &amp; Islamic Studies · Est. 2018</p>
       </div>
 
       <!-- Minimalist Golden Progress Line -->
-      <div class="mqa-preloader-progress-wrap">
-        <div class="mqa-preloader-track">
-          <div class="mqa-preloader-bar" id="mqa-preloader-bar"></div>
+      <div class="mqa-preloader-progress-wrap" style="width:100%;max-width:200px;display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <div class="mqa-preloader-track" style="width:100%;height:3px;background:rgba(10,51,40,0.08);border-radius:999px;overflow:hidden;">
+          <div class="mqa-preloader-bar" id="mqa-preloader-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#a8823e,#d6b574);border-radius:999px;"></div>
         </div>
         <div class="mqa-preloader-meta">
-          <span class="mqa-preloader-pct" id="mqa-preloader-pct">0%</span>
+          <span class="mqa-preloader-pct" id="mqa-preloader-pct" style="font-size:0.75rem;font-weight:600;color:#a8823e;">0%</span>
         </div>
       </div>
     </div>
@@ -804,8 +806,15 @@ function initReveal() {
   if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
   const io = new IntersectionObserver(entries => entries.forEach(en => {
     if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
-  }), { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  els.forEach(e => io.observe(e));
+  }), { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+  els.forEach(e => {
+    const rect = e.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.92) {
+      e.classList.add('in');
+    } else {
+      io.observe(e);
+    }
+  });
 }
 
 /* ---------- 5. Forms (enrollment & contact) via Formspree ---------- */
